@@ -1,62 +1,27 @@
 import { Button } from "~/components/ui/button";
 import { TodoPreviewCard } from "./TodoPreviewCard";
 import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import type { TodoPreviewCardType } from "~/+types/TodoPreviewCardType";
+import { fetchAllTodo } from "~/services/todo";
 
-const todoItem = [
-  {
-    id: "1",
-    title: "Buy groceries",
-    description: "Purchase milk, eggs, and bread from the supermarket.",
-  },
-  {
-    id: "2",
-    title: "Finish project report",
-    description:
-      "Complete the final draft of the project report and send it to the manager.",
-  },
-  {
-    id: "3",
-    title: "Call plumber",
-    description: "Schedule a visit to fix the leaking kitchen sink.",
-  },
-  {
-    id: "4",
-    title: "Read a book",
-    description: "Read at least 30 pages of the new novel.",
-  },
-  {
-    id: "5",
-    title: "Workout",
-    description: "Go for a 30-minute run in the park.",
-  },
-  {
-    id: "6",
-    title: "Plan vacation",
-    description: "Research destinations and book flights for summer vacation.",
-  },
-  {
-    id: "7",
-    title: "Pay bills",
-    description: "Pay electricity and internet bills online.",
-  },
-  {
-    id: "8",
-    title: "Clean house",
-    description: "Vacuum the living room and organize the closet.",
-  },
-  {
-    id: "9",
-    title: "Attend meeting",
-    description: "Join the team meeting at 10 AM via Zoom.",
-  },
-  {
-    id: "10",
-    title: "Update resume",
-    description: "Add recent work experience and skills to the resume.",
-  },
-];
 
 export function HomePage() {
+ const [todoItems, setTodoItems] = useState<TodoPreviewCardType[]>([]);
+  useEffect(() => {
+    // This effect runs once when the component mounts  
+    const fetchData = async() => {
+      const data = await fetchAllTodo();
+      if(data){
+        setTodoItems(data);
+      }
+    }
+ fetchData();
+  }, []);
+
+
+
+
   return (
     <section className="w-screen h-screen relative flex flex-row justify-center items-center">
       <div
@@ -75,9 +40,9 @@ export function HomePage() {
         {/* todo preiview card */}
 
         <div className=" my-4 flex flex-col gap-2 ">
-          {todoItem.map((item) => (
+          {todoItems.map((item) => (
             <TodoPreviewCard
-              key={item.id}
+               key={item.id}
               {...item} // Spread the item properties
             />
           ))}

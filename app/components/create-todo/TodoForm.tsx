@@ -15,11 +15,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   title: z.string().min(1, "title is required"),
   description: z.string().min(1, "description is required"),
-  tags: z.string().optional(),
+   tags: z.array(z.string()).optional(),
 });
 type TodoFormProps = {
   onSubmit: (values: z.infer<typeof formSchema> & { tags: string[] }) => void;
@@ -49,59 +50,81 @@ export default function TodoForm({ onSubmit, defaultValues }: TodoFormProps) {
       setTagInput("");
     }
   };
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
 
+  const handleSubmit = (data: z.infer<typeof formSchema>) => {
+    onSubmit({ ...data, tags });
+    form.reset();
+    setTags([]);
+  };
   return (
     <Form {...form}>
-      <FormField
-        control={form.control}
-        name="title"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Todo</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter todo" {...field} />
-            </FormControl>
-          </FormItem>
-        )}
-      ></FormField>
-      <FormField
-        control={form.control}
-        name="title"
-        render={({ field }) => (
-          <FormItem className="mt-4">
-            <FormLabel>Description</FormLabel>
-            <FormControl>
-              <Textarea placeholder="Enter description" {...field} />
-            </FormControl>
-          </FormItem>
-        )}
-      ></FormField>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Todo</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter todo" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem className="mt-4">
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Enter description" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <div className="mt-4">
-        <FormLabel>Tags</FormLabel>
-        <div className="flex gap-2">
-          <Input
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
-            placeholder="Add a tag"
-          />
-          <Button type="button" onClick={addTag}>
-            Add Tag
-          </Button>
+        <div className="mt-4">
+          <FormLabel>Tags</FormLabel>
+          <div className="flex gap-2">
+            <Input
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              placeholder="Add a tag"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addTag();
+                }
+              }}
+            />
+            <Button type="button" onClick={addTag}>
+              Add Tag
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-2 py-1 bg-gray-300 rounded-md flex items-center"
+                onClick={() => removeTag(tag)}
+              >
+                {tag}
+                <span className="text-xs">x</span>
+              </span>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2 mt-2">
-          {tags.map((tag) => (
-            <span
-              key={tag}
-              className="px-2 py-1 text-sm bg-background rounded-md"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
 
-      <Button type="submit" className="mt-4 items-center justify-center"> Create Todo</Button>
+        <Button type="submit" className="mt-4 cursor-pointer">
+          Create Todo
+        </Button>
+      </form>
     </Form>
   );
 }
