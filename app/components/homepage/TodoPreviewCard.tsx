@@ -13,6 +13,7 @@ import {
   DialogHeader,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { Link } from "react-router";
 
 export function TodoPreviewCard({
   id,
@@ -47,7 +48,8 @@ export function TodoPreviewCard({
           {/* tags */}
           <div className="flex flex-row  gap-1 max-w-[30%] flex-shrink-0 flex-end justify-end items-center ">
             <Tag tagText="Tag1" />
-          
+          <Tag tagText="Tag2" />
+          <Tag tagText="Tag3" />
           </div>
         </div>
         <DialogContent className="sm:max-w-[425px]">
@@ -60,11 +62,19 @@ export function TodoPreviewCard({
           </DialogHeader>
           <div className="grid gap-4 py-4"></div>
           <DialogFooter>
+          <Link to = {`/create-todo?id=${id}`}>
+            <Button type="button" variant="default" className="ml-auto cursor-point">
+                Edit
+              </Button>
+          </Link>
+            
             <DialogClose asChild>
               <Button type="button" variant="secondary">
                 Close
               </Button>
             </DialogClose>
+
+    
           </DialogFooter>
         </DialogContent>
       </div>

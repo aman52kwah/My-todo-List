@@ -15,12 +15,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
+import { toast } from "sonner";
+import { updateTodoItem } from "~/services/todo";
 
 const formSchema = z.object({
   title: z.string().min(1, "title is required"),
   description: z.string().min(1, "description is required"),
-   tags: z.array(z.string()).optional(),
+  tags: z.array(z.string()).optional(),
 });
 type TodoFormProps = {
   onSubmit: (values: z.infer<typeof formSchema> & { tags: string[] }) => void;
@@ -28,16 +30,23 @@ type TodoFormProps = {
     title?: string;
     description?: string;
     tags?: string[];
+    isDone: boolean;
   };
 };
 
 export default function TodoForm({ onSubmit, defaultValues }: TodoFormProps) {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>(defaultValues?.tags || []);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      title: defaultValues?.title || "",
+      description: defaultValues?.description || "",
+    },
+    values: {
       title: defaultValues?.title || "",
       description: defaultValues?.description || "",
     },
@@ -54,7 +63,22 @@ export default function TodoForm({ onSubmit, defaultValues }: TodoFormProps) {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleSubmit = (data: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+    const id = searchParams.get("id");
+    // If an id is present, it means we are updating an existing todo
+    if (id) {
+      const updatedTodoItem = {
+        ...form.getValues(),
+        id,
+        isDone: defaultValues?.isDone ?? false,};
+        
+      const res = await updateTodoItem(updatedTodoItem, id);
+      if (res) {
+        toast(res.message);
+        navigate("/");
+      }
+      return;
+    }
     onSubmit({ ...data, tags });
     form.reset();
     setTags([]);
@@ -122,7 +146,7 @@ export default function TodoForm({ onSubmit, defaultValues }: TodoFormProps) {
         </div>
 
         <Button type="submit" className="mt-4 cursor-pointer">
-          Create Todo
+          Save Todo
         </Button>
       </form>
     </Form>

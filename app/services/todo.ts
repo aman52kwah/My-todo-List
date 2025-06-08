@@ -1,16 +1,11 @@
-import type {
-  createTodoParam,
-  GetAllTodoRes,
-  TodoItemRes,
-} from "~/+types/todo";
+import type { createTodoParam, ITodoItem, TodoItemRes } from "~/+types/todo";
 
 const TODO_API = "http://localhost:5000";
 
-export async function fetchAllTodo(): Promise<GetAllTodoRes[] | undefined> {
+export async function fetchAllTodo(): Promise<ITodoItem[] | undefined> {
   try {
     const res = await fetch(`${TODO_API}`, {
       method: "GET",
-      
     });
 
     if (res.status !== 200) {
@@ -18,12 +13,30 @@ export async function fetchAllTodo(): Promise<GetAllTodoRes[] | undefined> {
       throw new Error("Network response was not ok");
     }
 
-    const data: GetAllTodoRes[] = await res.json();
+    const data: ITodoItem[] = await res.json();
 
     return data;
   } catch (error) {
     console.error("failed to fetch data", error);
     return [];
+  }
+}
+
+// fecth a todo from backend
+export async function fetchTodo(id: string): Promise<TodoItemRes | undefined> {
+  try {
+    const res = await fetch(`http://localhost:5000/todo/${id}`, {
+      method: "GET",
+    });
+    // if the response is not ok, throw an error
+    if (res.status !== 200) {
+      throw new Error();
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -37,8 +50,6 @@ export async function createTodoItem(
       headers: {
         authorization: "qwertyuiop",
         "Content-Type": "application/json",
-        
-        
       },
     });
 
@@ -47,6 +58,31 @@ export async function createTodoItem(
     }
 
     const data: TodoItemRes = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+//update todo item
+export async function updateTodoItem(
+  todoItem: ITodoItem, id : string
+): Promise<TodoItemRes | undefined> {
+  try {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    const body = JSON.stringify(todoItem);
+
+    const res = await fetch(`http://localhost:5000/todo?id=${id}`, {
+      method: "PUT",
+      headers,
+      body,
+    });
+    if (res.status !== 200) {
+      throw new Error();
+    }
+    const data = await res.json();
     return data;
   } catch (error) {
     console.error(error);
