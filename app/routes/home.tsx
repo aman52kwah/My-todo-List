@@ -3,6 +3,7 @@ import type { Route } from "./+types/home";
 import { Button } from "~/components/ui/button";
 import { TodoPreviewCard } from "~/components/homepage/TodoPreviewCard";
 
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
@@ -15,6 +16,7 @@ export default function Home() {
     <main className="w-screen h-screen">
 
 <HomePage/>
+
 {/* <TodoPreviewCard title={""} description={""} id={""}/> */}
 
     </main>
