@@ -17,12 +17,14 @@ import { z } from "zod";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
-import { updateTodoItem } from "~/services/todo";
+import { createTodoItem, updateTodoItem } from "~/services/todo";
+import { Switch } from "../ui/switch";
 
 const formSchema = z.object({
   title: z.string().min(1, "title is required"),
   description: z.string().min(1, "description is required"),
   tags: z.array(z.string()).optional(),
+  isDone: z.boolean().optional(),
 });
 type TodoFormProps = {
   onSubmit: (values: z.infer<typeof formSchema> & { tags: string[] }) => void;
@@ -45,10 +47,12 @@ export default function TodoForm({ onSubmit, defaultValues }: TodoFormProps) {
     defaultValues: {
       title: defaultValues?.title || "",
       description: defaultValues?.description || "",
+      isDone: false,
     },
     values: {
       title: defaultValues?.title || "",
       description: defaultValues?.description || "",
+      isDone: defaultValues?.isDone || false,
     },
   });
 
@@ -65,19 +69,36 @@ export default function TodoForm({ onSubmit, defaultValues }: TodoFormProps) {
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     const id = searchParams.get("id");
+    const { title, description, isDone } = data;
     // If an id is present, it means we are updating an existing todo
     if (id) {
       const updatedTodoItem = {
         ...form.getValues(),
         id,
-        isDone: defaultValues?.isDone ?? false,};
-        
-      const res = await updateTodoItem(updatedTodoItem, id);
+        isDone: isDone ?? false,
+      };
+
+      const res = await updateTodoItem(
+        updatedTodoItem,
+        id,
+        updatedTodoItem.isDone
+      );
       if (res) {
         toast(res.message);
         navigate("/");
+      } else {
+        const res = await createTodoItem({
+          title,
+          description,
+          isDone: isDone ?? false,
+        });
+        if (res) {
+          toast(res.message);
+          navigate("/");
+        } else {
+          toast("Failed to create a todo item");
+        }
       }
-      return;
     }
     onSubmit({ ...data, tags });
     form.reset();
@@ -112,38 +133,54 @@ export default function TodoForm({ onSubmit, defaultValues }: TodoFormProps) {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="isDone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Todo item done ?</FormLabel>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="mt-4">
-          <FormLabel>Tags</FormLabel>
-          <div className="flex gap-2">
-            <Input
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              placeholder="Add a tag"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addTag();
-                }
-              }}
-            />
-            <Button type="button" onClick={addTag}>
-              Add Tag
-            </Button>
-          </div>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-2 py-1 bg-gray-300 rounded-md flex items-center"
-                onClick={() => removeTag(tag)}
-              >
-                {tag}
-                <span className="text-xs">x</span>
-              </span>
-            ))}
-          </div>
-        </div>
+        {/* // <div className="mt-4">
+        //   <FormLabel>Tags</FormLabel>
+        //   <div className="flex gap-2">
+        //     <Input
+        //       value={tagInput}
+        //       onChange={(e) => setTagInput(e.target.value)}
+        //       placeholder="Add a tag"
+        //       onKeyDown={(e) => {
+        //         if (e.key === "Enter") {
+        //           e.preventDefault();
+        //           addTag();
+        //         }
+        //       }}
+        //     />
+        //     <Button type="button" onClick={addTag}>
+        //       Add Tag
+        //     </Button>
+        //   </div>
+        //   <div className="flex flex-wrap gap-2 mt-2">
+        //     {tags.map((tag) => (
+        //       <span
+        //         key={tag}
+        //         className="px-2 py-1 bg-gray-300 rounded-md flex items-center"
+        //         onClick={() => removeTag(tag)}
+        //       >
+        //         {tag}
+        //         <span className="text-xs">x</span>
+        //       </span>
+        //     ))}
+        //   </div>
+        // </div> */}
 
         <Button type="submit" className="mt-4 cursor-pointer">
           Save Todo

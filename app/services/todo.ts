@@ -37,6 +37,7 @@ export async function fetchTodo(id: string): Promise<TodoItemRes | undefined> {
     return data;
   } catch (error) {
     console.error(error);
+    throw new Error("Failed to fetch todo item");
   }
 }
 
@@ -66,7 +67,8 @@ export async function createTodoItem(
 
 //update todo item
 export async function updateTodoItem(
-  todoItem: ITodoItem, id : string
+  todoItem: ITodoItem, id : string,
+  isDone: boolean
 ): Promise<TodoItemRes | undefined> {
   try {
     const headers = new Headers();
@@ -87,4 +89,5 @@ export async function updateTodoItem(
   } catch (error) {
     console.error(error);
   }
+
 }

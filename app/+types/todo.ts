@@ -2,13 +2,14 @@ export interface ITodoItem {
   title: string;
   description: string;
   id: string;
-  idDone: boolean;
+  isDone: boolean;
 }
 
 export interface createTodoParam {
   title: string;
   description: string;
-  tags?: string[];
+  //tags?: string[];
+  isDone: boolean;
 }
 
 export interface TodoApiRes {

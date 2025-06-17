@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
 // Update the import path to the correct location of TodoForm, for example:
 import TodoForm from "../components/create-todo/TodoForm";
 import { Button } from "~/components/ui/button";
-import { createTodoItem, fetchTodo } from "~/services/todo";
+import { createTodoItem, fetchTodo, updateTodoItem } from "~/services/todo";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import type { TodoItemRes } from "~/+types/todo";
@@ -12,7 +12,7 @@ export default function CreateTodoPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [todoItem, setTodoItem] = useState<TodoItemRes>();
-
+ 
   const handleSubmit = async ({
     title,
     description,
@@ -26,9 +26,14 @@ export default function CreateTodoPage() {
     if(id){
 
         //update todo item
-        const res = await updateTodoItem({
-
-        })
+        const res = await updateTodoItem(
+          {
+            title, description,
+            id: "",
+            idDone: false
+          }, // pass the updated todo item data
+          id // pass the id as the second argument
+        );
 
     }else{
         
@@ -50,11 +55,16 @@ export default function CreateTodoPage() {
 
     const fetchTodoData = async () => {
       if (id) { 
-        const apiRes = await fetchTodo(id);
+        try{
+           const apiRes = await fetchTodo(id);
 
         if (apiRes) {
           setTodoItem(apiRes);
         }
+        } catch(error){
+          toast("failed to fetch todo item");
+        }
+       
       }
     };
     // If id is present, fetch the todo item
@@ -75,8 +85,8 @@ export default function CreateTodoPage() {
       <TodoForm onSubmit={handleSubmit}
        defaultValues={{title : todoItem?.data.title,
         description: todoItem?.data.description,
-        isDone: todoItem?.data.isDone,
+        isDone: todoItem?.data.isDone ?? false,
       }} />
     </div>
-  );
-}
+  
+)}
