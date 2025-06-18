@@ -110,7 +110,8 @@ export default function Signup() {
               <FormItem>
                  <FormControl> 
                   <div className="flex flex-col gap-2"> 
-                    <Input placeholder="password"
+                    <Input placeholder="........"
+                    type="password"
                     {...field}
                      className="bg-white" />
                       </div>
@@ -127,7 +128,8 @@ export default function Signup() {
                 <FormItem> 
                   <FormControl>
                      <div className="flex flex-col gap-2"> 
-                      <Input placeholder="confirm password"
+                      <Input placeholder="......."
+                      type="password"
                       {...field}
                        className="bg-white" />
                        </div> 

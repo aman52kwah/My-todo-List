@@ -85,7 +85,7 @@ export default function LoginPage() {
                 <div className="flex flex-col gap-2">
                  <Input 
                  type="password"
-                 placeholder="password"
+                 placeholder="......."
                   {...field} 
                   className="bg-white" />
                    </div>
