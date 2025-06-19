@@ -1,5 +1,5 @@
 export interface RegisterUserParams{
-   name: string,
+   username: string,
     email:string,
     password: string,
 }
@@ -9,7 +9,7 @@ export interface RegisterUserResponse{
     isSuccessful:boolean,
     data?:{
         id: string;
-        name:string;
+        username:string;
         email:string
     };
 }
@@ -26,7 +26,7 @@ export interface LoginUserResponse{
     isSuccessful:boolean,
     data?:{
         id:string,
-        name:string,
+        username:string,
         email:string,
         
     }

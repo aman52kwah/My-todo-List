@@ -46,7 +46,7 @@ export default function Signup() {
   const handleSubmit = async (values: z.infer<typeof signupSchema>) => {
     try {
       await registerUser({
-        name: values.name,
+        username: values.name,
         email: values.email,
         password: values.password,
       });
