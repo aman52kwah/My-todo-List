@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import { registerUser } from "../../services/auth";
+import { register } from "../../services/auth";
 
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -45,7 +45,7 @@ export default function Signup() {
   //signup component
   const handleSubmit = async (values: z.infer<typeof signupSchema>) => {
     try {
-      await registerUser({
+      await register({
         username: values.name,
         email: values.email,
         password: values.password,
@@ -67,6 +67,7 @@ export default function Signup() {
           <div className="flex flex-col items-center gap-y-2">
            
              <h1 className="text-3xl font-semibold">create Account</h1>
+             <h3>create an account to get started</h3>
           </div>
           <div className="flex w-full flex-col gap-8">
             <div className="flex flex-col gap-4">
@@ -77,6 +78,7 @@ export default function Signup() {
                 <FormItem>
                   <FormControl>
                     <div className="flex flex-col gap-2">
+                      <FormLabel>Username</FormLabel>
                        <Input
                        placeholder="username"
                        {...field} 
@@ -95,6 +97,7 @@ export default function Signup() {
               <FormItem> 
                 <FormControl> 
                 <div className="flex flex-col gap-2">
+                  <FormLabel>Email</FormLabel>
                   <Input placeholder="email"
                   {...field}
                    className="bg-white" /> 
@@ -110,7 +113,8 @@ export default function Signup() {
               <FormItem>
                  <FormControl> 
                   <div className="flex flex-col gap-2"> 
-                    <Input placeholder="........"
+                  <FormLabel>Password</FormLabel>
+                    <Input placeholder="••••••••"
                     type="password"
                     {...field}
                      className="bg-white" />
@@ -128,7 +132,8 @@ export default function Signup() {
                 <FormItem> 
                   <FormControl>
                      <div className="flex flex-col gap-2"> 
-                      <Input placeholder="......."
+                      <FormLabel>Confirm Password</FormLabel>
+                      <Input placeholder="••••••••"
                       type="password"
                       {...field}
                        className="bg-white" />

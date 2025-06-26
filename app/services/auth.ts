@@ -1,76 +1,99 @@
-export interface RegisterUserParams{
-   username: string,
-    email:string,
-    password: string,
-}
+import { fetchWrapper } from "~/utils/fetchWrapper";
 
-export interface RegisterUserResponse{
-    message:string,
-    isSuccessful:boolean,
-    data?:{
-        id: string;
-        username:string;
-        email:string
-    };
-}
+const API_URL = "http://localhost:5000";
 
-
-//interface for login
-export interface LoginUserParams{
-    email: string,
-    password:string
-}
-
-export interface LoginUserResponse{
-    message:string
-    isSuccessful:boolean,
-    data?:{
-        id:string,
-        username:string,
-        email:string,
-        
-    }
-}
-
-
-
-export async function loginUser(
-    params: LoginUserParams
-):Promise<LoginUserResponse>{
-try{
-    const res = await fetch("https://localhost:5000/db/index",{
-        method:"GET",
-        headers:{"Content-Type": "application.json"},
-        body:JSON.stringify(params),
-    });
-    const data = await res.json();
-    return data;
-} catch(error : any){
-    return{
-        message: error.message || "Login failed",
-        isSuccessful: false,
-    };
+export type RegisterParams = {
+  username: string;
+  email: string;
+  password: string;
 };
+
+export type AuthResponse = {
+  user: {
+    id: string;
+    email: string;
+    username: string;
+  };
+  message: string;
+};
+
+//types for login
+export type LoginParams = {
+  email: string;
+  password: string;
+};
+
+//login with email and password
+export async function login(
+  params: LoginParams
+): Promise<AuthResponse | undefined> {
+  try {
+    const data = await fetchWrapper<AuthResponse>(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+      // don't redirect on unauthorized for login
+      redirectOnUnauthorized: false,
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Login failed:", error);
+    throw error;
+  }
 }
 
+// register new user account
 
+export async function register(
+  params: RegisterParams
+): Promise<AuthResponse | undefined> {
+  try {
+    const data = await fetchWrapper<AuthResponse>(`${API_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+      //don't redirect on unauthorized or registrattion
+      redirectOnUnauthorized: false,
+    });
+    return data;
+  } catch (error) {
+    console.error("Registration failed:", error);
+    throw error;
+  }
+}
 
-export async function registerUser(
-    params: RegisterUserParams
-):Promise<RegisterUserResponse>{
-    try{
-        const res = await fetch("http://localhost:5000/db/index", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(params),
-        });
+//============== logout the current user=======================
 
-            const data = await res.json();
-            return data;
-    } catch(error : any){
-        return{
-            message : error?.message || " Registration failed",
-            isSuccessful: false,
-        };
-    }
+// export async function logout(): Promise<void> {
+//   try {
+//     await fetchWrapper(`${API_URL}/auth/logout`, {
+//       method: "POST",
+//       redirectOnUnauthorized: false,
+//     });
+//     //redirect to login page after logout
+//     window.location.href = "/login";
+//   } catch (error) {
+//     console.error("Failed to logout:", error);
+//     //still redirect to login even if logout request fails
+//     window.location.href = "/login";
+//   }
+// }
+
+//check if the user is authenticated
+//this would make a request to verify the session
+
+export async function checkAuth(): Promise<boolean> {
+  try {
+    const response = await fetchWrapper<{ isAuthenticated: boolean }>(
+      `${API_URL}/auth/check`,
+      {
+        method: "GET",
+        redirectOnUnauthorized: false,
+      }
+    );
+    return response.isAuthenticated;
+  } catch (error) {
+    return false;
+  }
 }

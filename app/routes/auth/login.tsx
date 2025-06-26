@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import { loginUser } from "../../services/auth";
+import { login } from "../../services/auth";
 
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -37,7 +37,7 @@ export default function LoginPage() {
     //login component
     const handleSubmit = async(values:z.infer<typeof loginSchema>)=> {
         try{
-            await loginUser({
+            await login({
                 email:values.email,
                 password:values.password,
             });
@@ -59,6 +59,7 @@ export default function LoginPage() {
         <div className="flex w-full max-w-sm flex-col items-center gap-y-8 rounded-md border border-muted bg-white px-6 py-12 shadow-md">
           <div className="flex flex-col items-center gap-y-2">
            <h1 className="text-3xl font-semibold">Login</h1>
+           <h3>Login with credentials to get started</h3>
          </div>
           <div className="flex w-full flex-col gap-8">
             <div className="flex flex-col gap-4">
@@ -69,6 +70,7 @@ export default function LoginPage() {
                  <FormItem>
                      <FormControl>
                          <div className="flex flex-col gap-2"> 
+                          <FormLabel>Email</FormLabel>
                             <Input placeholder="email"
                              {...field} className="bg-white" />
                               </div> 
@@ -83,9 +85,10 @@ export default function LoginPage() {
                  <FormItem> 
                 <FormControl> 
                 <div className="flex flex-col gap-2">
+                  <FormLabel>Password</FormLabel>
                  <Input 
                  type="password"
-                 placeholder="......."
+                 placeholder="••••••••"
                   {...field} 
                   className="bg-white" />
                    </div>
