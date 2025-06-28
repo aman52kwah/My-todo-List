@@ -33,7 +33,7 @@ export function HomePage() {
         {/* heading and buton */}
         <div className="flex flex-row justify-between">
           <Link to={"/login"}>
-          <Button onClick={() => logout()}>Logout </Button>
+          <Button onClick={() => logout(localStorage,window)}>Logout </Button>
           </Link>
           <h1 className="text-3xl font-bold">Todo</h1>
           <Link to={"/create-todo"} className="text-white">
