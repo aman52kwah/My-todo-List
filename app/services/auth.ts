@@ -32,6 +32,7 @@ export async function login(
   try {
     const data = await fetchWrapper<AuthResponse>(`${API_URL}/auth/login`, {
       method: "POST",
+      credentials:'include',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(params),
       // don't redirect on unauthorized for login
