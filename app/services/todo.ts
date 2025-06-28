@@ -1,6 +1,8 @@
 import type { createTodoParam, ITodoItem, TodoItemRes } from "~/+types/todo";
 import { fetchWrapper } from "~/utils/fetchWrapper";
-const TODO_API = "http://localhost:5000";
+const TODO_API = process.env.NODE_ENV==='production' ?
+'todobackend-cyan.vercel.app' :"http://localhost:5000";
+
 
 export async function fetchAllTodo(): Promise<ITodoItem[] | undefined> {
   try {

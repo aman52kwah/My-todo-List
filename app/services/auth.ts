@@ -63,25 +63,35 @@ export async function register(
   }
 }
 
-//============== logout the current user=======================
+// ============== logout the current user=======================
 
-// export async function logout(): Promise<void> {
-//   try {
-//     await fetchWrapper(`${API_URL}/auth/logout`, {
-//       method: "POST",
-//       redirectOnUnauthorized: false,
-//     });
-//     //redirect to login page after logout
-//     window.location.href = "/login";
-//   } catch (error) {
-//     console.error("Failed to logout:", error);
-//     //still redirect to login even if logout request fails
-//     window.location.href = "/login";
-//   }
-// }
+export async function logout(
+  localStorage: Storage,
+  window: Window & typeof globalThis,
+  p0: { localStorage: Storage; "": string; window: Window & typeof globalThis }
+): Promise<void> {
+  try {
+    await fetchWrapper(`${API_URL}/auth/logout`, {
+      method: "POST",
+      redirectOnUnauthorized: false,
+      credentials: "include",
+    });
+    //redirect to login page after logout
+    localStorage.removeItem("session"); // clear token from local storage
 
-//check if the user is authenticated
-//this would make a request to verify the session
+    localStorage.removeItem("user");
+
+    window.location.href = "/login";
+  } catch (error) {
+    console.error("Failed to logout:", error);
+    //still redirect to login even if logout request fails
+    localStorage.removeItem("session");
+    window.location.href = "/login";
+  }
+}
+
+// check if the user is authenticated
+// this would make a request to verify the session
 
 export async function checkAuth(): Promise<boolean> {
   try {

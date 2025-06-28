@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { useEffect, useState } from "react";
 import type { TodoPreviewCardType } from "~/+types/TodoPreviewCardType";
 import { fetchAllTodo } from "~/services/todo";
-
+import {logout} from "~/services/auth";
 
 export function HomePage() {
  const [todoItems, setTodoItems] = useState<TodoPreviewCardType[]>([]);
@@ -32,6 +32,9 @@ export function HomePage() {
       >
         {/* heading and buton */}
         <div className="flex flex-row justify-between">
+          <Link to={"/login"}>
+          <Button onClick={() => logout()}>Logout </Button>
+          </Link>
           <h1 className="text-3xl font-bold">Todo</h1>
           <Link to={"/create-todo"} className="text-white">
             <Button className="cursor-pointer">Create Todo</Button>
