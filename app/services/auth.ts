@@ -1,7 +1,7 @@
 import { fetchWrapper } from "~/utils/fetchWrapper";
 
 const API_URL = process.env.NODE_ENV==='production' ?
-'https://todobackend-cyan.vercel.app' :"http://localhost:5000";
+'https://todobackend-cyan.vercel.app' : "http://localhost:5000";
 
 
 export type RegisterParams = {
@@ -54,6 +54,7 @@ export async function register(
   try {
     const data = await fetchWrapper<AuthResponse>(`${API_URL}/auth/register`, {
       method: "POST",
+       credentials:'include',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(params),
       //don't redirect on unauthorized or registrattion
