@@ -103,6 +103,7 @@ export async function checkAuth(): Promise<boolean> {
       `${API_URL}/auth/check`,
       {
         method: "GET",
+        credentials:'include',
         redirectOnUnauthorized: false,
       }
     );
