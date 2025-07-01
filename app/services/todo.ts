@@ -10,7 +10,6 @@ export async function fetchAllTodo(): Promise<ITodoItem[] | undefined> {
     console.log("Fetching todos from API...");
     const data = await fetchWrapper<ITodoItem[]>(TODO_API, {
       method: "GET",
-      credentials: "include",
     });
     return data;
   } catch (error) {
@@ -23,7 +22,6 @@ export async function fetchTodo(id: string): Promise<TodoItemRes | undefined> {
   try {
     const data = await fetchWrapper<TodoItemRes>(`${TODO_API}/todo/${id}`, {
       method: "GET",
-      credentials: "include",
     });
     // if the response is not ok, throw an error
     return data;
@@ -61,7 +59,6 @@ export async function updateTodoItem(
   try {
     const data = await fetchWrapper<TodoItemRes>(`${TODO_API}/todo?id=${id}`, {
       method: "PUT",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
