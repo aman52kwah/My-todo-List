@@ -70,4 +70,5 @@ export async function updateTodoItem(
     return data;
   } catch (error) {
     console.error(error);
-  
+  }
+}
