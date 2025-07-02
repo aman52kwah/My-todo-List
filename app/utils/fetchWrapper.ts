@@ -68,7 +68,7 @@ export async function fetchWrapper<T>(
   options: FetchOptions = {}
 ): Promise<T> {
   // Set default option to redirect on 401
-  const { redirectOnUnauthorized = true, ...fetchOptions } = options;
+  const { redirectOnUnauthorized = false, ...fetchOptions } = options;
 
   // Always include credentials to send cookies with requests
   const requestOptions: RequestInit = {

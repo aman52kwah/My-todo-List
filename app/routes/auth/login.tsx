@@ -42,7 +42,6 @@ export default function LoginPage() {
                 password:values.password,
             });
             toast.success("Logged in successfully");
-
             navigate("/");
         } catch(error : any){
             const errorMessage = error.message || "Failed to login";

@@ -77,8 +77,9 @@ export async function logout(
   try {
     await fetchWrapper(`${API_URL}/auth/logout`, {
       method: "POST",
+      credentials:'include',
       redirectOnUnauthorized: false,
-      credentials: "include",
+      
     });
     //redirect to login page after logout
     localStorage.removeItem("session"); // clear token from local storage
