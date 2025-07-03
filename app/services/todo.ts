@@ -8,7 +8,7 @@ const TODO_API =
 export async function fetchAllTodo(): Promise<ITodoItem[] | undefined> {
   try {
     console.log("Fetching todos from API...");
-    const data = await fetchWrapper<ITodoItem[]>(`${TODO_API}/todos`, {
+    const data = await fetchWrapper<ITodoItem[]>(`${TODO_API}/todo`, {
       method: "GET",
       credentials: "include",
     });
