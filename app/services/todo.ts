@@ -8,7 +8,7 @@ const TODO_API =
 export async function fetchAllTodo(): Promise<ITodoItem[] | undefined> {
   try {
     console.log("Fetching todos from API...");
-    const data = await fetchWrapper<ITodoItem[]>(TODO_API, {
+    const data = await fetchWrapper<ITodoItem[]>(`${TODO_API}/todos`, {
       method: "GET",
       credentials: "include",
     });
@@ -44,7 +44,6 @@ export async function createTodoItem(
       body: JSON.stringify(item),
       headers: {
         "Content-Type": "application/json",
-        authorization: "qwertyuiop",
       },
     });
 
@@ -62,6 +61,7 @@ export async function updateTodoItem(
   try {
     const data = await fetchWrapper<TodoItemRes>(`${TODO_API}/todo?id=${id}`, {
       method: "PUT",
+      credentials: "include", // Include credentials for session management
       headers: {
         "Content-Type": "application/json",
       },
