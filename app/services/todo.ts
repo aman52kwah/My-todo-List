@@ -37,6 +37,8 @@ export async function createTodoItem(
   try {
     const data = await fetchWrapper<TodoItemRes>(`${TODO_API}/todo`, {
       method: "POST",
+      credentials: "include", // Include credentials for session management
+      // This is important if your API requires authentication
       body: JSON.stringify(item),
       headers: {
         "Content-Type": "application/json",
