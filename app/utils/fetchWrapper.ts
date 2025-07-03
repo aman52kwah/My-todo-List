@@ -81,6 +81,7 @@ export async function fetchWrapper<T>(
 
     // Handle 401 Unauthorized errors
     if (response.status === 401) {
+      if(redirectOnUnauthorized ) {
       // Store the current location to redirect back after login
       const currentPath = window.location.pathname;
 
@@ -93,7 +94,7 @@ export async function fetchWrapper<T>(
       window.location.href = "/login";
       throw new Error("Authentication required. Redirecting to login page.");
     }
-
+  }
     // Handle other error status codes
     if (!response.ok) {
       let errorMessage = `API Error: ${response.status} ${response.statusText}`;
