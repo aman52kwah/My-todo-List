@@ -93,6 +93,9 @@ export async function fetchWrapper<T>(
       // Redirect to login page
       window.location.href = "/login";
       throw new Error("Authentication required. Redirecting to login page.");
+    } else{
+      // If redirectOnUnauthorized is false, just throw an error
+      throw new Error("Authentication required. Please log in.(401 Unauthorized)");
     }
   }
     // Handle other error status codes
