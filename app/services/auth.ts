@@ -1,7 +1,7 @@
 import { fetchWrapper } from "~/utils/fetchWrapper";
 
 const API_URL = process.env.NODE_ENV==='production' ?
-'https://nodejs-production-b940.up.railway.app' : "http://localhost:5000";
+'https://todobackend-git-main-aman52kwahs-projects.vercel.app' : "http://localhost:5000";
 
 
 export type RegisterParams = {
