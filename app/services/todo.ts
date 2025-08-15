@@ -2,7 +2,7 @@ import type { createTodoParam, ITodoItem, TodoItemRes } from "~/+types/todo";
 import { fetchWrapper } from "~/utils/fetchWrapper";
 const TODO_API =
   process.env.NODE_ENV === "production"
-    ? "https://todobackend-git-main-aman52kwahs-projects.vercel.app"
+    ? "https://nodejs-omega-orpin.vercel.app/"
     : "http://localhost:5000";
 
 export async function fetchAllTodo(): Promise<ITodoItem[] | undefined> {
@@ -10,7 +10,6 @@ export async function fetchAllTodo(): Promise<ITodoItem[] | undefined> {
     console.log("Fetching todos from API...");
     const data = await fetchWrapper<ITodoItem[]>(`${TODO_API}/todo`, {
       method: "GET",
-      
     });
     return data;
   } catch (error) {
